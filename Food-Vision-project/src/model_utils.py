@@ -25,16 +25,16 @@ def create_model(input_shape = (224,224,3) ,num_classes = train_data.num_classes
     x = layers.Dropout(0.3)(x)
     # output layer
     output = layers.Dense(num_classes, activation  = "softmax" , name = "ouput_layer")(x)
-    model = tf.keras.Model(inputs , output)
+
+    model = tf.keras.Model(inputs , output , name = "EfficientnetV2B0_model")
+
     model.compile(loss = "categorical_crossentropy",
                   optimizer = tf.keras.optimizers.Adam(),
                   metrics = ["accuracy"])
     return model
 
-    efficientnet_model = create_model()
-    efficientnet_model.summary()
 
-def save_model(model , path = "/content/tensorflow-food-vision/Food-Vision-project/models/efficientnetv2b0_save"):
+def save_model(model , path = "/content/tensorflow-food-vision/Food-Vision-project/models/efficientnetv2b0_save"): ## select your own path 
     model.save(path)
     print(f"Model saved succeesfully at {path}")
 

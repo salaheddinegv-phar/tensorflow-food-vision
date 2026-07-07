@@ -286,3 +286,22 @@ def calculate_results(y_true, y_pred):
                   "recall": model_recall,
                   "f1": model_f1}
   return model_results
+
+## Create checkpoint function
+def create_checkpoint_callback(checkpoint_path): ## Enter your checkpoint path
+  checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath = checkpoint_path,
+                                                           save_weight_only = True,
+                                                           save_best_only = True,
+                                                           save_freq = "epoch",
+                                                           verbose = 1
+                                                            )
+  return checkpoint_callback
+
+  # Combine histories for plotting
+def combine_history(history_1, history_2):
+    acc = history_1.history['accuracy'] + history_2.history['accuracy']
+    val_acc = history_1.history['val_accuracy'] + history_2.history['val_accuracy']
+    loss = history_1.history['loss'] + history_2.history['val_loss']
+    val_loss = history_1.history['val_loss'] + history_2.history['val_loss']
+    return {'accuracy': acc, 'val_accuracy': val_acc, 'loss': loss, 'val_loss': val_loss}
+  
