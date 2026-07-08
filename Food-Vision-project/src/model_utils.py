@@ -1,16 +1,16 @@
 
-  from tensorflow.keras import layers
-  from tensorflow.keras.models import Sequential
-  import tensorflow as tf
+from tensorflow.keras import layers
+from tensorflow.keras.models import Sequential
+import tensorflow as tf
 ## creating data augmentation layer to enhance our model performance and prevent overfitting
-  data_augementation = Sequential([
+data_augementation = Sequential([
       layers.RandomFlip("horizantol_and_vertical"),
       layers.RandomRotation(0.3),
       layers.RandomZoom(0.3),
       layers.RandomHeight(0.3),
       layers.RandomWidth(0.3)],
       name = "data_augementation")
-  def create_model(input_shape = (224,224,3) ,num_classes = train_data.num_classes):
+def create_model(input_shape = (224,224,3) ,num_classes = train_data.num_classes):
     base_model = tf.keras.applications.efficientnet_v2.EfficientNetV2B0(include_top = False,   ## load pre-trained model(EfficientNetV2B0)
                                                                         weights = "imagenet",
                                                                         input_shape = input_shape)
@@ -34,12 +34,12 @@
     efficientnet_model = create_model()
     efficientnet_model.summary()
 
-  def save_model(model , path = "/content/tensorflow-food-vision/Food-Vision-project/models"):
+def save_model(model , path = "/content/tensorflow-food-vision/Food-Vision-project/models"):
     model.save(path)
     print(f"Model saved succeesfully at {path}")
 
 
-  def unfreeze_model(model , num_layers = 10):
+def unfreeze_model(model , num_layers = 10):
     efficientnet_base_model = model.layers[2] ## selecting the base model from our full model (view the summary of the model )
     efficientnet_base_model.trainable = True
     for layer in efficientnet_base_model[:-num_layers]:
