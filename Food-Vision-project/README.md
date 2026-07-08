@@ -38,7 +38,6 @@ I started with **10% of the data** to get fast results, then scaled up to the **
 | EfficientNetB0           | Full        | [YY.Y%]  | [YY.Y%]   | [YY.Y%] | ~XX hours     |
 | EfficientNetB4 (fine-tuned) | Full     | [ZZ.Z%]  | [ZZ.Z%]   | [ZZ.Z%] | ~XX hours     |
 
-> *Add your actual results here after training*
 
 ### Visual Results
 
