@@ -43,7 +43,7 @@ def unfreeze_model(model , num_layers = 10):
     efficientnet_base_model = model.layers[2] ## selecting the base model from our full model (view the summary of the model )
     efficientnet_base_model.trainable = True
     for layer in efficientnet_base_model[:-num_layers]:
-      efficientnet_base_model.trainable = False ""unfreeze the last 10 layer in our model
+      efficientnet_base_model.trainable = False #unfreeze the last 10 layer in our model
     model.compile(loss = "categorical_crossentropy",
                   optimizer = tf.keras.optimizers.Adam(1e-4), ## change the learning rate with *10 much small than the first time
                                                               ## to prevent our model losing the general feature that has been extracted in feature extraction phase

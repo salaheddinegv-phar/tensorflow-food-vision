@@ -1,12 +1,14 @@
 
 import sys 
-import os 
+import os
+
+from matplotlib.pyplot import savefig 
   
 sys.path.append(os.path.abspath("/content/tensorflow-food-vision/Food-Vision-project/src"))
 
 from src.data_preparation import create_data_loader
 from src.model_utils import create_model , save_model , unfreeze_model
-from src.evaluation import plot_training_curves , plot_confusion_matrix
+from src.evaluation import plot_training_curves , make_confusion_matrix
 from helper_functions import create_tensorboard_callback , create_checkpoint_callback , combine_history
 
 train_dir = "/content/tensorflow-food-vision/Food-Vision-project/data/101_food_classes_10_percent/train"  ## write your own train diretory
@@ -59,6 +61,26 @@ print(f" Your model saved succesfully !!")
 
 ## showing the Changes that happening to train and validation  loss , accuracy when we training our model with feature extraction and fine tuning stages
 combine_history(feature_extraction_history , fine_tuning_history)
+
+## plotting Confusion_matrix ==Note==: "before plotting it we it to extract y_labels and y_pred=="pred_classes"
+pred_probs = efficientnet_model.predict(test_data , verbose = 1) #setting verbose = 1 to see how much the model take to make prediction
+pred_classes = pred_probs.argmax(axis=1)
+
+## making y_labels list :
+y_labels = []
+for images , labels in test_data.unbatch() :
+  y_labels.append(labels.numpy().argmax())
+
+## The extraction of class_names :
+class_names = test_data.class_names
+print(class_names[:15]) ## seeing the 15 first classes 
+
+## Using make_confusion_matrix function :
+make_confusion_matrix(y_labels=y_labels , y_pred=pred_classes , classes=class_names ,figsize = (100,100), text_size=20 ,norm=True, savefig=True)
+
+
+
+
 
 
 
