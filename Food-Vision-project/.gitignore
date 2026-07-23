@@ -1,1 +1,38 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
 
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data (too large for GitHub)
+data/
+*.zip
+*.tar
+*.tar.gz
+
+# Models (huge files — use GitHub Releases instead)
+models/*.keras
+models/*.h5
+models/*.pb
+models/*.savedmodel
+models/checkpoints/
+
+# Logs
+logs/
+Tensorflow_hub_log/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env

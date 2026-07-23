@@ -35,7 +35,7 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 
 # Our function needs a different name to sklearn's plot_confusion_matrix
-def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15, norm=False, savefig=False): 
+def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(24, 24), text_size=8, norm=False, savefig=False): 
   """Makes a labelled confusion matrix comparing predictions and ground truth labels.
 
   If classes is passed, confusion matrix will be labelled, if not, integer class values
@@ -155,35 +155,81 @@ def create_tensorboard_callback(dir_name, experiment_name):
 # Plot the validation and training data separately
 import matplotlib.pyplot as plt
 
-def plot_loss_curves(history):
-  """
-  Returns separate loss curves for training and validation metrics.
-
-  Args:
-    history: TensorFlow model History object (see: https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/History)
-  """ 
-  loss = history.history['loss']
-  val_loss = history.history['val_loss']
-
-  accuracy = history.history['accuracy']
-  val_accuracy = history.history['val_accuracy']
-
-  epochs = range(len(history.history['loss']))
-
-  # Plot loss
-  plt.plot(epochs, loss, label='training_loss')
-  plt.plot(epochs, val_loss, label='val_loss')
-  plt.title('Loss')
-  plt.xlabel('Epochs')
-  plt.legend()
-
-  # Plot accuracy
-  plt.figure()
-  plt.plot(epochs, accuracy, label='training_accuracy')
-  plt.plot(epochs, val_accuracy, label='val_accuracy')
-  plt.title('Accuracy')
-  plt.xlabel('Epochs')
-  plt.legend();
+def plot_loss_curves(history, savefig=False, save_path="images/training_curves.png", dpi=300):
+    """
+    Returns separate loss curves for training and validation metrics.
+    
+    Args:
+        history: TensorFlow model History object
+        savefig: bool or str. If True, saves to save_path. If str, saves to that path.
+        save_path: Default path to save the figure
+        dpi: Resolution for saved image
+    """
+    # Extract metrics
+    loss = history.history['loss']
+    val_loss = history.history.get('val_loss', None)
+    accuracy = history.history['accuracy']
+    val_accuracy = history.history.get('val_accuracy', None)
+    epochs = range(len(loss))
+    
+    # Create professional figure
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig.suptitle('Training History', fontsize=16, fontweight='bold', y=1.02)
+    
+    # --- Loss Plot ---
+    ax1 = axes[0]
+    ax1.plot(epochs, loss, color='#E74C3C', linewidth=2.5, label='Training Loss', marker='o', markersize=4)
+    if val_loss:
+        ax1.plot(epochs, val_loss, color='#3498DB', linewidth=2.5, label='Validation Loss', marker='s', markersize=4)
+    
+    ax1.set_title('Loss Curve', fontsize=14, fontweight='bold', pad=10)
+    ax1.set_xlabel('Epochs', fontsize=12)
+    ax1.set_ylabel('Loss', fontsize=12)
+    ax1.legend(loc='upper right', framealpha=0.9)
+    ax1.grid(True, linestyle='--', alpha=0.4)
+    ax1.set_xlim(0, len(epochs) - 1)
+    
+    # Annotate final values
+    ax1.annotate(f'Final: {loss[-1]:.4f}', 
+                 xy=(epochs[-1], loss[-1]), 
+                 xytext=(epochs[-1] - 2, loss[-1] + 0.1),
+                 fontsize=9, color='#E74C3C')
+    
+    # --- Accuracy Plot ---
+    ax2 = axes[1]
+    ax2.plot(epochs, accuracy, color='#2ECC71', linewidth=2.5, label='Training Accuracy', marker='o', markersize=4)
+    if val_accuracy:
+        ax2.plot(epochs, val_accuracy, color='#9B59B6', linewidth=2.5, label='Validation Accuracy', marker='s', markersize=4)
+    
+    ax2.set_title('Accuracy Curve', fontsize=14, fontweight='bold', pad=10)
+    ax2.set_xlabel('Epochs', fontsize=12)
+    ax2.set_ylabel('Accuracy', fontsize=12)
+    ax2.legend(loc='lower right', framealpha=0.9)
+    ax2.grid(True, linestyle='--', alpha=0.4)
+    ax2.set_xlim(0, len(epochs) - 1)
+    ax2.set_ylim(0, 1.05)
+    
+    # Annotate final values
+    ax2.annotate(f'Final: {accuracy[-1]:.4f}', 
+                 xy=(epochs[-1], accuracy[-1]), 
+                 xytext=(epochs[-1] - 2, accuracy[-1] - 0.1),
+                 fontsize=9, color='#2ECC71')
+    
+    plt.tight_layout()
+    
+    # Save figure
+    if savefig:
+        # Determine save path
+        filepath = save_path if isinstance(savefig, bool) else savefig
+        
+        # Create directory if needed
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        
+        plt.savefig(filepath, dpi=dpi, bbox_inches='tight', facecolor='white')
+        print(f"✅ Training curves saved to: {filepath}")
+    
+    plt.show()
+    return fig
 
 def compare_historys(original_history, new_history, initial_epochs=5):
     """
@@ -288,14 +334,23 @@ def calculate_results(y_true, y_pred):
   return model_results
 
 ## Create checkpoint function
-def create_checkpoint_callback(checkpoint_path): ## Enter your checkpoint path
+def create_checkpoint_callback(checkpoint_dir = "models\checkpoints"): ## Enter your checkpoint path
+
+  checkpoint_path = os.path.join(checkpoint_dir,"model_epoch_{epoch:02d}.weights.h5")
   checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath = checkpoint_path,
-                                                           save_weight_only = True,
-                                                           save_best_only = True,
+                                                           save_weights_only = True,
                                                            save_freq = "epoch",
                                                            verbose = 1
                                                             )
-  return checkpoint_callback
+  best_chkp_path = os.path.join(checkpoint_dir , "best_model.weight.h5") 
+  best_chkp = tf.keras.callbacks.ModelCheckpoint(filepath = best_chkp_path,
+                                                 save_weights_only=True,
+                                                 save_best_only=True,
+                                                 monitor = "val_loss",
+                                                 mode = "min",
+                                                 verbose = 1)
+
+  return checkpoint_callback , best_chkp
 
   # Combine histories for plotting
 def combine_history(history_1, history_2):
@@ -304,4 +359,6 @@ def combine_history(history_1, history_2):
     loss = history_1.history['loss'] + history_2.history['val_loss']
     val_loss = history_1.history['val_loss'] + history_2.history['val_loss']
     return {'accuracy': acc, 'val_accuracy': val_acc, 'loss': loss, 'val_loss': val_loss}
+
+
   
