@@ -32,11 +32,10 @@ I started with **10% of the data** to get fast results, then scaled up to the **
 
 ### Model Performance
 
-| Model                    | Dataset     | Accuracy | Precision | Recall | Training Time |
-|--------------------------|-------------|----------|-----------|--------|---------------|
-| EfficientNetB0           | 10%         | [XX.X%]  | [XX.X%]   | [XX.X%] | ~XX minutes   |
-| EfficientNetB0           | Full        | [YY.Y%]  | [YY.Y%]   | [YY.Y%] | ~XX hours     |
-| EfficientNetB4 (fine-tuned) | Full     | [ZZ.Z%]  | [ZZ.Z%]   | [ZZ.Z%] | ~XX hours     |
+| Model                    | Dataset          | Accuracy | Training Time |
+|--------------------------|------------------|----------|---------------|
+| EfficientNetB0           | 10%  (7,575 img) | [58.8%]  | ~8 minutes   |
+| EfficientNetB0           | Full (75,750 img)|       In progress...    |
 
 
 ### Visual Results
