@@ -60,6 +60,15 @@ I created custom code to analyze and address these confusions.
 - Matplotlib, Seaborn, Scikit-learn
 - Google Colab
 
+## How use terminal for training The model on your own ?!
+go to train.py file inside "src folder" and scroll down until seeing CLI, than write on your terminal:
+example : 
+```terminal
+python src/train.py --train_dir "..." --test_dir "..." initial_epochs 15
+exc....
+```
+this is the way how using the project 
+
 ## Project Structure
 
 ```bash
