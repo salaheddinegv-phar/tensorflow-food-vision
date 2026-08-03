@@ -90,6 +90,7 @@ python src/train.py `
   --initial_epochs 15 `
   --fine_tune_epochs 10 `
   --batch_size 32 `
+  --patience 3`
   --model_save_path models/food_classifier_10percent.keras `
   --experiment_name "EfficientNetV2B0_10Percent"
 ```
@@ -101,6 +102,7 @@ python src/train.py `
   --initial_epochs 20 `
   --fine_tune_epochs 15 `
   --batch_size 32 `
+  --patience 5`
   --model_save_path models/full_food_classifier.keras `
   --experiment_name "EfficientNetV2B0_Full"
 ```
