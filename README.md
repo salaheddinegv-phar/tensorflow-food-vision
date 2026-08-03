@@ -71,3 +71,70 @@ food-vision-tensorflow/
 ├── README.md
 ├── requirements.txt
 └── .gitignore
+```
+## How clone the repo to you pc
+```bash
+git clone https://github.com/salaheddinegv-phar/tensorflow-food-vision.git
+cd tensorflow-food-vision
+```
+## Install dependencies 
+```bash
+pip install -r requirements.txt
+```
+##  Training the Model
+#Train on 10% Dataset 
+```bash
+python src/train.py `
+  --train_dir data/train `
+  --test_dir data/test `
+  --initial_epochs 15 `
+  --fine_tune_epochs 10 `
+  --batch_size 32 `
+  --model_save_path models/food_classifier_10percent.keras `
+  --experiment_name "EfficientNetV2B0_10Percent"
+```
+#Train on Full Dataset 
+```bash
+python src/train.py `
+  --train_dir full_data/train `
+  --test_dir full_data/test `
+  --initial_epochs 20 `
+  --fine_tune_epochs 15 `
+  --batch_size 32 `
+  --model_save_path models/full_food_classifier.keras `
+  --experiment_name "EfficientNetV2B0_Full"
+```
+## All Available Arguments
+```feuilles de calcul
+| Argument                 | Description                 | Default                               | Example                 |
+| ------------------------ | --------------------------- | ------------------------------------- | ----------------------- |
+| `--train_dir`            | Path to training data       | **Required**                          | `data/food-101/train`   |
+| `--test_dir`             | Path to test data           | **Required**                          | `data/food-101/test`    |
+| `--initial_epochs`       | Feature extraction epochs   | `20`                                  | `15`                    |
+| `--fine_tune_epochs`     | Fine-tuning epochs          | `15`                                  | `10`                    |
+| `--batch_size`           | Batch size (adjust to VRAM) | `32`                                  | `64`                    |
+| `--patience`             | Early stopping patience     | `5`                                   | `3`                     |
+| `--model_save_path`      | Where to save the model     | `models/food_classifier.keras`        | `models/my_model.keras` |
+| `--checkpoint_dir`       | Checkpoint directory        | `models/checkpoints`                  | `checkpoints/`          |
+```
+## 📋 All Available Arguments
+```Feuilles de calcul
+Argument	Description	Default	Example
+--train_dir	Path to training data	Required	data/food-101/train
+--test_dir	Path to test data	Required	data/food-101/test
+--initial_epochs	Feature extraction epochs	20	15
+--fine_tune_epochs	Fine-tuning epochs	15	10
+--batch_size	Batch size (adjust to VRAM)	32	64
+--patience	Early stopping patience	5	3
+--model_save_path	Where to save the model	models/food_classifier.keras	models/my_model.keras
+--checkpoint_dir	Checkpoint directory	models/checkpoints	checkpoints/
+--log_dir	TensorBoard log directory	Tensorflow_hub_log	logs/
+--experiment_name	Name for TensorBoard	EfficientnetV2B0	MyExperiment
+--save_training_curves	Path to save loss curves	images/combined_training_curves.png	results/curves.png
+```
+## 📜 License
+This project is for educational purposes. Dataset from [ETH Zurich](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/).
+
+##🙏 Acknowledgments
+[Daniel Bourke](https://github.com/mrdbourke) — TensorFlow Developer Certificate Course
+[Food-101 Dataset](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/) — ETH Zurich
