@@ -73,4 +73,8 @@ def create_data_loader(train_dir, test_dir, image_size=(224, 224), batch_size=32
     test_data = test_data.prefetch(buffer_size=AUTOTUNE)
 
     # FIXED: Return class_names as 4th value
+<<<<<<< HEAD
     return train_data, test_data, num_classes, class_names
+=======
+    return train_data, test_data, num_classes, class_names
+>>>>>>> d742bb3bb3aa1f7530abb0326c63b394d6fc01d1
