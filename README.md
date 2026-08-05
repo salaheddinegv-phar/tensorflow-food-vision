@@ -139,7 +139,20 @@ Argument	Description	Default	Example
 --save_training_curves	Path to save loss curves	images/combined_training_curves.png	results/curves.png
 ```
 ## 📜 License
-This project is for educational purposes. Dataset from [ETH Zurich](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/).
+
+This project is released under the [MIT License](LICENSE).
+
+The Food-101 dataset is provided by [ETH Zurich](https://data.vision.ee.ethz.ch/cvl/datasets_extra/food-101/) and is used here for research and demonstration purposes. The model architecture, training pipeline, and evaluation code are original work.
+
+## 👤 About the Author
+
+**Salah Eddine** — Machine Learning Engineer specializing in computer vision and production-ready deep learning pipelines.
+
+- 🔗 [LinkedIn](your-linkedin-url)
+- 💻 [GitHub]([your-github-url](https://github.com/salaheddinegv-phar))
+- 📧 salaheddinegv@gmail.com
+
+**Open to freelance opportunities .** If you're building something with computer vision, let's talk.
 
 ##🙏 Acknowledgments
 [Daniel Bourke](https://github.com/mrdbourke) — TensorFlow Developer Certificate Course
