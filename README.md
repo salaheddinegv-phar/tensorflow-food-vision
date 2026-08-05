@@ -34,8 +34,8 @@ I started with **10% of the data** to get fast results, then scaled up to the **
 
 | Model                    | Dataset          | Accuracy | Training Time |
 |--------------------------|------------------|----------|---------------|
-| EfficientNetB0           | 10%  (7,575 img) | [58.8%]  | ~8 minutes   |
-| EfficientNetB0           | Full (75,750 img)|       In progress...    |
+| EfficientNetB0           | 10%  (7,575 img) | [58.8%]  | ~8 minutes    |
+| EfficientNetB0           | Full (75,750 img)| [74.19%] | ≈ 3h 58m      |
 
 
 ### Visual Results on 10%dataset
@@ -46,8 +46,8 @@ I started with **10% of the data** to get fast results, then scaled up to the **
 ## Most Confused Classes
 
 - `Steak` ↔ `filet_mignon`
-- `pork_chop` ↔ `filet_mignon`
-- `frozen_yogurt` ↔ `ice_cream`
+- `apple_pie` ↔ `bread_pudding`
+- `choclate_cake` ↔ `choclate_mousse`
 
 I created custom code to analyze and address these confusions.
 
@@ -80,6 +80,10 @@ cd tensorflow-food-vision
 ## Install dependencies 
 ```bash
 pip install -r requirements.txt
+```
+## How download the full dataset and organize it AUTO to train and test folder
+```bash
+python src/download_dataset.py
 ```
 ##  Training the Model
 #Train on 10% Dataset 
