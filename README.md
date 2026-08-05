@@ -40,8 +40,8 @@ I started with **10% of the data** to get fast results, then scaled up to the **
 
 ### Visual Results on 10%dataset
 
-![Confusion Matrix](images/)
-![Prediction Examples](images/)
+![Confusion Matrix](images/top_confusions.png)
+![Prediction Examples](images/combined_training_curves.png)
 
 ## Most Confused Classes
 
