@@ -21,7 +21,7 @@ def augment(image, label):
     image = tf.image.resize_with_crop_or_pad(image, original_shape[1], original_shape[2])
 
     # 3. Brightness, Contrast & Saturation
-    image = tf.image.random_brightness(image, max_delta=32.0 / 255.0)
+    image = tf.image.random_brightness(image, max_delta=16.0 / 255.0)
     image = tf.image.random_contrast(image, lower=0.85, upper=1.15)
     image = tf.image.random_saturation(image, lower=0.85, upper=1.15)
     image = tf.clip_by_value(image, 0.0, 255.0)

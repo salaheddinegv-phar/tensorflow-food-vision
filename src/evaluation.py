@@ -113,49 +113,93 @@ def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(100, 100),
     plt.show()
     return fig
   
-def plot_combined_history(feature_history, fine_history, savefig=False, save_path="images/combined_training_curves.png"):
+def plot_combined_history(*histories, savefig=False, save_path="images/combined_training_curves_full.png"):
     """
-    Plots feature extraction and fine-tuning histories as one continuous curve.
+    Plots multiple training histories (feature extraction + multiple fine-tuning stages)
+    as one continuous curve with unfreeze markers.
+    
+    Usage:
+        plot_combined_history(feature_history, fine_history_1, fine_history_2, fine_history_3)
     """
-    # Combine epochs
-    feat_epochs = list(range(1, len(feature_history.history['loss']) + 1))
-    fine_start = len(feat_epochs)
-    fine_epochs = list(range(fine_start + 1, fine_start + len(fine_history.history['loss']) + 1))
+    # Combine all histories
+    all_loss = []
+    all_val_loss = []
+    all_acc = []
+    all_val_acc = []
+    all_epochs = []
     
-    # Combine losses
-    all_loss = feature_history.history['loss'] + fine_history.history['loss']
-    all_val_loss = feature_history.history.get('val_loss', []) + fine_history.history.get('val_loss', [])
-    all_acc = feature_history.history['accuracy'] + fine_history.history['accuracy']
-    all_val_acc = feature_history.history.get('val_accuracy', []) + fine_history.history.get('val_accuracy', [])
+    unfreeze_points = []  # Points where unfreezing happened
+    current_epoch = 0
     
-    all_epochs = feat_epochs + fine_epochs
+    for i, history in enumerate(histories):
+        if history is None:
+            continue
+            
+        num_epochs = len(history.history['loss'])
+        epochs = list(range(current_epoch + 1, current_epoch + num_epochs + 1))
+        
+        all_loss.extend(history.history['loss'])
+        all_val_loss.extend(history.history.get('val_loss', []))
+        all_acc.extend(history.history['accuracy'])
+        all_val_acc.extend(history.history.get('val_accuracy', []))
+        all_epochs.extend(epochs)
+        
+        # Mark unfreeze point (except for first history = feature extraction)
+        if i > 0:
+            unfreeze_points.append(current_epoch + 0.5)
+        
+        current_epoch += num_epochs
     
+    # Create figure
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
     fig.suptitle('Training History: Feature Extraction → Fine Tuning', fontsize=16, fontweight='bold')
     
     # Loss plot
     ax1 = axes[0]
-    ax1.plot(all_epochs, all_loss, 'o-', color='#E74C3C', linewidth=2, label='Training Loss', markersize=4)
+    ax1.plot(all_epochs, all_loss, 'o-', color='#E74C3C', linewidth=2, label='Training Loss', markersize=3)
     if all_val_loss:
-        ax1.plot(all_epochs, all_val_loss, 's-', color='#3498DB', linewidth=2, label='Validation Loss', markersize=4)
-    ax1.axvline(x=fine_start + 0.5, color='gray', linestyle='--', alpha=0.7, label='Unfreeze')
+        ax1.plot(all_epochs, all_val_loss, 's-', color='#3498DB', linewidth=2, label='Validation Loss', markersize=3)
+    
+    # Add unfreeze markers
+    for point in unfreeze_points:
+        ax1.axvline(x=point, color='gray', linestyle='--', alpha=0.7)
+    
+    # Add legend for unfreeze stages
+    if len(unfreeze_points) >= 1:
+        ax1.axvline(x=unfreeze_points[0], color='gray', linestyle='--', alpha=0.7, label='Unfreeze 10 layers')
+    if len(unfreeze_points) >= 2:
+        ax1.axvline(x=unfreeze_points[1], color='orange', linestyle='--', alpha=0.7, label='Unfreeze 30 layers')
+    if len(unfreeze_points) >= 3:
+        ax1.axvline(x=unfreeze_points[2], color='green', linestyle='--', alpha=0.7, label='Unfreeze ALL')
+    
     ax1.set_title('Loss', fontsize=14)
     ax1.set_xlabel('Epochs')
     ax1.set_ylabel('Loss')
-    ax1.legend()
+    ax1.legend(loc='upper right', fontsize=8)
     ax1.grid(True, linestyle='--', alpha=0.4)
     
     # Accuracy plot
     ax2 = axes[1]
-    ax2.plot(all_epochs, all_acc, 'o-', color='#2ECC71', linewidth=2, label='Training Accuracy', markersize=4)
+    ax2.plot(all_epochs, all_acc, 'o-', color='#2ECC71', linewidth=2, label='Training Accuracy', markersize=3)
     if all_val_acc:
-        ax2.plot(all_epochs, all_val_acc, 's-', color='#9B59B6', linewidth=2, label='Validation Accuracy', markersize=4)
-    ax2.axvline(x=fine_start + 0.5, color='gray', linestyle='--', alpha=0.7, label='Unfreeze')
+        ax2.plot(all_epochs, all_val_acc, 's-', color='#9B59B6', linewidth=2, label='Validation Accuracy', markersize=3)
+    
+    # Add same unfreeze markers
+    for point in unfreeze_points:
+        ax2.axvline(x=point, color='gray', linestyle='--', alpha=0.7)
+    
+    if len(unfreeze_points) >= 1:
+        ax2.axvline(x=unfreeze_points[0], color='gray', linestyle='--', alpha=0.7, label='Unfreeze 10 layers')
+    if len(unfreeze_points) >= 2:
+        ax2.axvline(x=unfreeze_points[1], color='orange', linestyle='--', alpha=0.7, label='Unfreeze 30 layers')
+    if len(unfreeze_points) >= 3:
+        ax2.axvline(x=unfreeze_points[2], color='green', linestyle='--', alpha=0.7, label='Unfreeze ALL')
+    
     ax2.set_title('Accuracy', fontsize=14)
     ax2.set_xlabel('Epochs')
     ax2.set_ylabel('Accuracy')
     ax2.set_ylim(0, 1.05)
-    ax2.legend()
+    ax2.legend(loc='lower right', fontsize=8)
     ax2.grid(True, linestyle='--', alpha=0.4)
     
     plt.tight_layout()
@@ -171,7 +215,7 @@ def plot_combined_history(feature_history, fine_history, savefig=False, save_pat
 
 
 def plot_top_confusions(y_true, y_pred, classes, top_n=20, figsize=(14, 10), 
-                        savefig=False, save_path="images/top_confusions.png"):
+                        savefig=False, save_path="images/top_confusions_full.png"):
     """
     Plots only the most confused class pairs (off-diagonal elements).
     """
